@@ -1,0 +1,84 @@
+---
+title: "Breast cancer classification with AdaSampling"
+author: "Pengyi Yang (original version by Dinuka Perera)"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Breast cancer classification with AdaSampling}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+library(AdaSampling)
+data(brca)
+```
+
+Here we will examine how AdaSampling works on the Wisconsin Breast Cancer dataset, `brca`, from the UCI Machine Learning Repository and included as part of this package. For more information about the variables, try `?brca`. This dataset contains ten features, with an eleventh column containing the class labels, *malignant* or *benign*.
+
+```{r preview}
+head(brca)
+```
+
+First, clean up the dataset to transform into the required format.
+```{r prelim}
+brca.mat <- apply(X = brca[,-10], MARGIN = 2, FUN = as.numeric)
+brca.cls <- sapply(X = brca$cla, FUN = function(x) {ifelse(x == "malignant", 1, 0)})
+rownames(brca.mat) <- paste("p", 1:nrow(brca.mat), sep="_")
+```
+
+Examining this dataset shows balanced proportions of classes.
+```{r examinedata}
+table(brca.cls)
+brca.cls
+```
+
+In order to demonstrate how AdaSampling eliminates noisy class label data it will be necessary to introduce some noise into this dataset, by randomly flipping a selected number of class labels. More noise will be added to the positive observations. 
+```{r noise}
+set.seed(1)
+pos <- which(brca.cls == 1)
+neg <- which(brca.cls == 0)
+brca.cls.noisy <- brca.cls
+brca.cls.noisy[sample(pos, floor(length(pos) * 0.4))] <- 0
+brca.cls.noisy[sample(neg, floor(length(neg) * 0.3))] <- 1
+```
+
+Examining the noisy class labels reveals noise has been added:
+```{r examinenoisy}
+table(brca.cls.noisy)
+brca.cls.noisy
+```
+
+We can now run AdaSampling on this data. For more information use `?adaSample()`.
+
+```{r ada}
+Ps <- rownames(brca.mat)[which(brca.cls.noisy == 1)]
+Ns <- rownames(brca.mat)[which(brca.cls.noisy == 0)]
+
+brca.preds <- adaSample(Ps, Ns, train.mat=brca.mat, test.mat=brca.mat,
+                  classifier = "knn", C= 1, sampleFactor = 1)
+head(brca.preds)
+
+accuracy <- sum(brca.cls.noisy == brca.cls) / length(brca.cls)
+accuracy
+
+accuracyWithAdaSample <- sum(ifelse(brca.preds[,"P"] > 0.5, 1, 0) == brca.cls) / length(brca.cls)
+accuracyWithAdaSample
+
+```
+
+The table gives the prediction probability for both a positive ("P") and negative ("N") class label for each row of the test set. In order to compare the improvement in performance of adaSample against learning without resampling, use the `adaSvmBenchmark()` function. 
+
+In order to see how effective `adaSample()` is at removing noise, we will use the `adaSvmBenchmark()` function to compare its performance to a regular classification process.
+
+This procedure compares classification across four conditions, firstly using the original dataset (with correct label information), the second with the noisy dataset (but without AdaSampling), the third with AdaSampling, and the fourth utilising AdaSampling multiple times in the form of an ensemble learning model.
+
+```{r}
+adaSvmBenchmark(data.mat = brca.mat, data.cls = brca.cls.noisy, data.cls.truth = brca.cls, cvSeed=1)
+```
