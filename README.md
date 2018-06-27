@@ -7,14 +7,16 @@ unlabeled learning and learning with class label noise, which wraps around a
 traditional classifying algorithm. See our publication for details, 
 documentation and examples.
 
-### References
-* **Yang, P.**, Ormerod, J., Liu, W., Ma, C., Zomaya, A., Yang, J.(2018) AdaSampling for positive-unlabeled and label noise learning with bioinformatics applications. _IEEE Transactions on Cybernetics_, doi:10.1109/TCYB.2018.2816984 
+### Installation
+There are two ways to install the package:
 
-* **Yang, P.**, Liu, W., Yang, J. (2017). Positive unlabeled learning via wrapper-based adaptive 
-sampling. Proceedings of the 26th International Joint Conference on Artificial 
-Intelligence (IJCAI), 3273-3279. [[fulltext](https://doi.org/10.24963/ijcai.2017/457)]
+To install from CRAN [https://CRAN.R-project.org/package=AdaSampling]:
 
-To install this package, use:
+```r
+install.packages("AdaSampling")
+```
+
+To install from github, use:
 ```r
 devtools::install_github("PengyiYang/AdaSampling", build_vignettes = TRUE)
 library(AdaSampling)
@@ -31,5 +33,12 @@ In order to see demonstrations of these two functions, see:
 browseVignettes("AdaSampling")
 ```
 
-### Credits
-This developmental version of the AdaSampling package is initially created by Kukulege Dinuka Perera.
+### References
+* **Yang, P.**, Ormerod, J., Liu, W., Ma, C., Zomaya, A., Yang, J.(2018) AdaSampling for positive-unlabeled and label noise learning with bioinformatics applications. _IEEE Transactions on Cybernetics_, [[doi:10.1109/TCYB.2018.2816984](https://doi.org/10.1109/TCYB.2018.2816984)]
+
+* **Yang, P.**, Liu, W., Yang, J. (2017). Positive unlabeled learning via wrapper-based adaptive 
+sampling. Proceedings of the 26th International Joint Conference on Artificial 
+Intelligence (IJCAI), 3273-3279. [[fulltext](https://doi.org/10.24963/ijcai.2017/457)]
+
+### Acknowledgement
+The initial github repo of the AdaSampling package was put together by Kukulege Dinuka Perera.

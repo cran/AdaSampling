@@ -12,7 +12,7 @@
 
 <meta name="author" content="Pengyi Yang (original version by Dinuka Perera)" />
 
-<meta name="date" content="2018-06-02" />
+<meta name="date" content="2018-06-28" />
 
 <title>Breast cancer classification with AdaSampling</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Breast cancer classification with AdaSampling</h1>
 <h4 class="author"><em>Pengyi Yang (original version by Dinuka Perera)</em></h4>
-<h4 class="date"><em>2018-06-02</em></h4>
+<h4 class="date"><em>2018-06-28</em></h4>
 
 
 
@@ -154,10 +154,10 @@ brca.preds &lt;-<span class="st"> </span><span class="kw">adaSample</span>(Ps, N
                   <span class="dt">classifier =</span> <span class="st">&quot;knn&quot;</span>, <span class="dt">C=</span> <span class="dv">1</span>, <span class="dt">sampleFactor =</span> <span class="dv">1</span>)
 <span class="kw">head</span>(brca.preds)
 <span class="co">#&gt;             P         N</span>
-<span class="co">#&gt; p_1 0.8000000 0.2000000</span>
-<span class="co">#&gt; p_2 0.3333333 0.6666667</span>
-<span class="co">#&gt; p_3 0.8000000 0.2000000</span>
-<span class="co">#&gt; p_4 0.6000000 0.4000000</span>
+<span class="co">#&gt; p_1 1.0000000 0.0000000</span>
+<span class="co">#&gt; p_2 0.2857143 0.7142857</span>
+<span class="co">#&gt; p_3 0.6000000 0.4000000</span>
+<span class="co">#&gt; p_4 0.8000000 0.2000000</span>
 <span class="co">#&gt; p_5 1.0000000 0.0000000</span>
 <span class="co">#&gt; p_6 0.8000000 0.2000000</span>
 
@@ -167,7 +167,7 @@ accuracy
 
 accuracyWithAdaSample &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">ifelse</span>(brca.preds[,<span class="st">&quot;P&quot;</span>] <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">0</span>) <span class="op">==</span><span class="st"> </span>brca.cls) <span class="op">/</span><span class="st"> </span><span class="kw">length</span>(brca.cls)
 accuracyWithAdaSample
-<span class="co">#&gt; [1] 0.8667643</span></code></pre></div>
+<span class="co">#&gt; [1] 0.8374817</span></code></pre></div>
 <p>The table gives the prediction probability for both a positive (“P”) and negative (“N”) class label for each row of the test set. In order to compare the improvement in performance of adaSample against learning without resampling, use the <code>adaSvmBenchmark()</code> function.</p>
 <p>In order to see how effective <code>adaSample()</code> is at removing noise, we will use the <code>adaSvmBenchmark()</code> function to compare its performance to a regular classification process.</p>
 <p>This procedure compares classification across four conditions, firstly using the original dataset (with correct label information), the second with the noisy dataset (but without AdaSampling), the third with AdaSampling, and the fourth utilising AdaSampling multiple times in the form of an ensemble learning model.</p>
@@ -175,8 +175,8 @@ accuracyWithAdaSample
 <span class="co">#&gt;                Se    Sp    F1</span>
 <span class="co">#&gt; Original    0.971 0.973 0.960</span>
 <span class="co">#&gt; Baseline    0.791 0.976 0.859</span>
-<span class="co">#&gt; AdaSingle   0.880 0.975 0.913</span>
-<span class="co">#&gt; AdaEnsemble 0.921 0.978 0.937</span></code></pre></div>
+<span class="co">#&gt; AdaSingle   0.963 0.962 0.946</span>
+<span class="co">#&gt; AdaEnsemble 0.975 0.962 0.952</span></code></pre></div>
 
 
 

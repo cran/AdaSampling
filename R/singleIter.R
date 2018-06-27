@@ -34,13 +34,16 @@ singleIter <- function(Ps, Ns, dat, test=NULL, pos.probs=NULL, una.probs=NULL, c
   positive.train <- c()
   positive.cls <- c()
   
+  # determine the proper sample size for creating a balanced dataset
+  sampleN <- ifelse(length(Ps) < length(Ns), length(Ps), length(Ns))
+  
   # bootstrap sampling to build the positive training set (labeled as 'P')
-  idx.pl <- unique(sample(x=Ps, size=sampleFactor*length(Ps), replace=TRUE, prob=pos.probs[Ps]))
+  idx.pl <- unique(sample(x=Ps, size=sampleFactor*sampleN, replace=TRUE, prob=pos.probs[Ps]))
   positive.train <- dat[idx.pl,]
   positive.cls <- rep("P", nrow(positive.train))
   
   # bootstrap sampling to build the "unannotate" or "negative" training set (labeled as 'N')
-  idx.dl <- unique(sample(x=Ns, size=sampleFactor*length(Ns), replace=TRUE, prob=una.probs[Ns]))
+  idx.dl <- unique(sample(x=Ns, size=sampleFactor*sampleN, replace=TRUE, prob=una.probs[Ns]))
   unannotate.train <- dat[idx.dl,]
   unannotate.cls <- rep("N", nrow(unannotate.train))
   
